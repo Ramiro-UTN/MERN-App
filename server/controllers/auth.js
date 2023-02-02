@@ -42,4 +42,24 @@ export const register = async(req,res) => {
     }catch(err){
         res.status(500).json({error: err.message})
     }
+};
+
+
+/* LOGIN */
+
+export const login = async (req, res) => {
+    try{
+        const {email,password} = req.body;
+        const user = await User.findOne({email: email}); 
+        if(!user) return res.status(400).json({msg: "usser does not exists"});
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if(!isMatch) return res.status(400).json({msg: "invalid credentials"});
+
+        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET);
+        delete user.password; //so it doesn't send the password to the frontend
+        res.status(200).json({token, user});
+    }catch (err){
+        res.status(500).json({error: err.message})
+    }
 }

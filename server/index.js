@@ -9,7 +9,7 @@ import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url"; //for setting up paths configuring directories
 import {register} from "./controllers/auth.js"
-
+import authRoutes from "./routes/auth.js";
 /* CONFIGURATIONS */
 
 const __filename = fileURLToPath(import.meta.url); //grab file url
@@ -40,6 +40,9 @@ const upload = multer({storage});
 /* ROUTES WITH FILES */
 app.post("/auth/register", upload.single("picture"), register);
 
+/*ROUTES*/
+
+app.use("/auth", authRoutes);
 
 /* MONGOOSE SETUP */
 
